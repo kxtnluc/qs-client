@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { tryGetLoggedInUser } from "./managers/authManager";
+import { Spinner } from "reactstrap";
+import ApplicationViews from "./views/ApplicationViews";
+import NavBar from "./components/Home/nav/NavBar";
 
 function App() {
+  const [loggedInUser, setLoggedInUser] = useState();
+
+  useEffect(() => {
+    // user will be null if not authenticated
+    tryGetLoggedInUser().then((user) => {
+      setLoggedInUser(user);
+    });
+  }, []);
+
+  // wait to get a definite logged-in state before rendering
+  if (loggedInUser === undefined) {
+    return <Spinner />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NavBar loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser} />
+      <ApplicationViews
+        loggedInUser={loggedInUser}
+        setLoggedInUser={setLoggedInUser}
+      />
+    </>
   );
 }
 
