@@ -22,7 +22,7 @@ export default function Login({ setLoggedInUser }:any) {
   };
 
   return (
-    <div className="container" style={{ maxWidth: "500px" }}>
+    <div className="container" style={{ maxWidth: "500px", marginTop: "15rem", scale: "1.3" }}>
       <h3>Login</h3>
       <FormGroup>
         <Label>Email</Label>

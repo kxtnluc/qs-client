@@ -1,0 +1,16 @@
+.nav-main{
+    margin-left: auto;
+}
+
+.mr-auto {
+    color: white;
+}
+
+.nav-item{
+
+    margin-right: 3rem;
+    margin-left: 3rem;
+    .nav-item-link{
+        
+    }
+}
