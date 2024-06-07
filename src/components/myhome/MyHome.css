@@ -1,0 +1,73 @@
+.qg-cardtopper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.qg-header{
+    text-align: center;
+    flex-grow: 1;
+
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+    font-size: 50px;
+    color: white;
+}
+
+.qg-edit-div{
+    position: absolute;
+    right: 1%; /* Adjust as needed */
+    .qg-edit-button{
+    }
+}
+
+.qg-card{
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+
+.q-ul{
+    
+    margin-top: 2rem;
+    list-style: none;
+    font-weight: 600;
+    
+}
+
+.q-card{
+    background-color: rgb(45, 38, 57);
+
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.q-li{
+    .q-body{
+        font-size: 20px;
+        margin-top: 0.5rem;
+    }
+    
+    .q-response{
+        .q-response-input{
+            margin-bottom: 1.25rem;
+            float: left;
+            width:90%;
+        }
+    }
+
+    .q-submit{
+        float: right;
+        margin-top: -10px;
+    }
+
+    .q-save{
+        float: right;
+        margin-top: -10px;
+    }
+}
+

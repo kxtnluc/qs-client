@@ -43,9 +43,9 @@ export default function Register({ setLoggedInUser }:any) {
   };
 
   return (
-    <div className="container" style={{ maxWidth: "500px" }}>
+    <div className="container" style={{ maxWidth: "500px", marginTop: "12rem", scale: "1.3"  }}>
       <h3>Sign Up</h3>
-      <FormGroup>
+      {/* <FormGroup>
         <Label>First Name</Label>
         <Input
           type="text"
@@ -64,7 +64,7 @@ export default function Register({ setLoggedInUser }:any) {
             setLastName(e.target.value);
           }}
         />
-      </FormGroup>
+      </FormGroup> */}
       <FormGroup>
         <Label>Email</Label>
         <Input
@@ -75,7 +75,7 @@ export default function Register({ setLoggedInUser }:any) {
           }}
         />
       </FormGroup>
-      <FormGroup>
+      {/* <FormGroup>
         <Label>User Name</Label>
         <Input
           type="text"
@@ -84,8 +84,8 @@ export default function Register({ setLoggedInUser }:any) {
             setUserName(e.target.value);
           }}
         />
-      </FormGroup>
-      <FormGroup>
+      </FormGroup> */}
+      {/* <FormGroup>
         <Label>Address</Label>
         <Input
           type="text"
@@ -93,8 +93,8 @@ export default function Register({ setLoggedInUser }:any) {
           onChange={(e) => {
             setAddress(e.target.value);
           }}
-        />
-      </FormGroup>
+        /> 
+      </FormGroup> */}
       <FormGroup>
         <Label>Password</Label>
         <Input

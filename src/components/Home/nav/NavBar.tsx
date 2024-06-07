@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { NavLink as RRNavLink } from "react-router-dom";
+import { NavLink as RRNavLink, useNavigate } from "react-router-dom";
 import {
-  Button,
   Collapse,
   Nav,
   NavLink,
@@ -11,56 +10,64 @@ import {
   NavbarText,
   NavbarToggler,
 } from "reactstrap";
+import { Button } from "@mui/material";
 import { logout } from "../../../managers/authManager";
+import "./NavBar.css";
 
-export default function NavBar({ loggedInUser, setLoggedInUser }:any) {
+export default function NavBar({ loggedInUser, setLoggedInUser }: any) {
   const [open, setOpen] = useState(false);
 
+  const navigate = useNavigate();
   const toggleNavbar = () => setOpen(!open);
 
   console.log(loggedInUser)
 
   return (
     <div>
-      <Navbar color="light" light fixed="true" expand="lg">
-        <NavbarBrand className="mr-auto" tag={RRNavLink} to="/">
-          BooKKeeping
+      <Navbar color="dark" dark fixed="true" expand="lg">
+        <NavbarBrand className="mr-auto" tag={RRNavLink} to="home">
+          GameOverPlan
         </NavbarBrand>
         {loggedInUser ? (
           <>
             <NavbarToggler onClick={toggleNavbar} />
             <Collapse isOpen={open} navbar>
-              <Nav navbar>
-                <NavItem onClick={() => setOpen(false)}>
-                  <NavLink tag={RRNavLink} to="/route1">
-                    Link1
+              <Nav className="nav-main" navbar>
+                <NavItem className="nav-item" onClick={() => setOpen(false)}>
+                  <NavLink className="nav-item-link" tag={RRNavLink} to="/myhome">
+                    Home
                   </NavLink>
                 </NavItem>
-                <NavItem onClick={() => setOpen(false)}>
-                  <NavLink tag={RRNavLink} to="/route2">
-                    Link2
+                <NavItem className="nav-item" onClick={() => setOpen(false)}>
+                  <NavLink className="nav-item-link" tag={RRNavLink} to="/myaccount">
+                    My Account
                   </NavLink>
                 </NavItem>
-                {loggedInUser.roles.includes("Admin") && (
-                  <NavItem onClick={() => setOpen(false)}>
-                    <NavLink tag={RRNavLink} to="/adminroute1">
+                <NavItem className="nav-item" onClick={() => setOpen(false)}>
+                  <NavLink className="nav-item-link" tag={RRNavLink} to="/membership">
+                    Membership
+                  </NavLink>
+                </NavItem>
+                {loggedInUser.roles?.includes("Admin") && (
+                  <NavItem className="nav-item" onClick={() => setOpen(false)}>
+                    <NavLink className="nav-item-link" tag={RRNavLink} to="/adminroute1">
                       AdminLink-1
                     </NavLink>
                   </NavItem>
                 )}
               </Nav>
             </Collapse>
-            <NavbarText style={{ marginRight: "4px" }}>
-              Bikes in Garage:
-            </NavbarText>
+
             <Button
               color="primary"
+              variant="outlined"
               onClick={(e) => {
                 e.preventDefault();
                 setOpen(false);
                 logout().then(() => {
                   setLoggedInUser(null);
                   setOpen(false);
+                  navigate("/home")
                 });
               }}
             >
@@ -68,10 +75,15 @@ export default function NavBar({ loggedInUser, setLoggedInUser }:any) {
             </Button>
           </>
         ) : (
-          <Nav navbar>
+          <Nav className="nav-main" navbar>
+            <NavItem className="nav-item" onClick={() => setOpen(false)}>
+              <NavLink style={{marginTop: "0.4rem"}} className="nav-item-link" tag={RRNavLink} to="/membership">
+                Membership
+              </NavLink>
+            </NavItem>
             <NavItem>
               <NavLink tag={RRNavLink} to="/login">
-                <Button color="primary">Login</Button>
+                <Button variant="contained" color="primary">Login</Button>
               </NavLink>
             </NavItem>
           </Nav>

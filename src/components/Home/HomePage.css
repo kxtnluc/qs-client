@@ -1,0 +1,41 @@
+.hp-main{
+
+    .hp-section-header{
+
+        display: flex;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 65px;
+        font-weight: 500;
+        flex-flow: column;
+        align-items: center;
+        margin-top: 8%;
+        
+        .hp-header-two{
+            font-size: 75px;
+            font-weight: 700;
+            letter-spacing: 0.75rem;
+        }
+
+        .hp-header-three{
+            font-weight: 400;
+        }
+    }
+
+    .hp-section-getstarted{
+        display: flex;
+        justify-content: center;
+        margin-top: 5rem;
+
+        .hp-btn{
+            font-size: 24px;
+            font-weight: 600;
+            width: 200px;
+            background-color: rgb(160, 113, 180);
+            border-color: rgb(59, 37, 72);
+        }
+
+        .hp-btn:hover{
+            background-color: rgb(171, 138, 185);
+        }
+    }
+}
