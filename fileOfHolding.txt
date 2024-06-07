@@ -1,0 +1,15 @@
+<Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", }} className='q-card'>
+    <div className='q-body'>
+        Add: {uq.question.body}
+    </div>
+    <div className='q-submit'>
+        <IconButton color='primary' size='small' onClick={() => handleAdd(uq.question, uq.questionId)} className='q-save-btn'><AddIcon fontSize='large' /></IconButton>
+    </div>
+    <div className='q-response'>
+        <TextField onChange={(e) => handleInputChange(e, uq.questionId)} className='q-response-input' size='small' type='text' value={responseStates[uq.questionId] || ''}
+            onKeyUp={(e) => {
+                if (e.key === "Enter") handleAdd(uq.question, uq.questionId)
+            }}
+        />
+    </div>
+</Card>

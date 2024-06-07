@@ -58,7 +58,10 @@ export const MembershipPage = ({ loggedInUser }: any) => {
                                                 <div className="mp-btn-div">
                                                     <Button onClick={handleBuyBtn} size="large" variant="contained" color="success" className="mp-btn" endIcon={<ShoppingCartIcon />}>Buy</Button>
                                                 </div>
-                                                <div className="mp-price">${mrow.price}</div>
+                                                {mrow.name === "Lifetime" ? 
+                                                (<div className="mp-price">${mrow.price}</div>):
+                                                (<div className="mp-price">${mrow.price}/{mrow.name.charAt(0).toLowerCase()}</div>)}
+                                                
                                             </>
                                         )}
                                         

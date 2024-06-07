@@ -17,18 +17,17 @@ const actions = [
   { icon: <DeleteIcon />, name: 'Delete' },
 ];
 
-export default function SpeedDialComponent({setEditMode, setReload, reload, question}:any) {
+export default function SpeedDialComponent({setEditMode, setReload, reload, userQuestion}:any) {
 
     const handleActionEvent = async (action:string) => {
-        const uqid = question.userQuestions[0].id
-        console.log(question.userQuestions[0].response)
-        console.log(question.id)
+        const uqid = userQuestion.id
+        console.log(userQuestion.response)
         console.log(action)
 
         if(action === "Copy"){
             // console.log("copying")
-            navigator.clipboard.writeText(question.userQuestion[0].response).then(() => {
-                console.log(question.userQuestion[0].response+' copied to clipboard')
+            navigator.clipboard.writeText(userQuestion.response).then(() => {
+                console.log(userQuestion.response+' copied to clipboard')
             })
         }
         if(action === "Delete"){

@@ -5,6 +5,7 @@ import Register from "../auth/Register";
 import { HomePage } from "../components/Home/HomePage";
 import { MyHome } from "../components/myhome/MyHome";
 import { MembershipPage } from "../components/membership/MembershipPage";
+import { AccountPage } from "../components/account/AccountPage";
 
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }:any) {
@@ -30,6 +31,10 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }:any) 
 
         <Route path="membership">
           <Route index element={<MembershipPage loggedInUser={loggedInUser}/>} />
+        </Route>
+
+        <Route path="myaccount">
+          <Route index element={<AccountPage loggedInUser={loggedInUser}/>} />
         </Route>
 
 

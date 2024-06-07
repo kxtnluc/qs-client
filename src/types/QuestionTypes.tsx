@@ -8,6 +8,8 @@ export type Question = {
     id: number;
     body: string;
     questionGroupId: number;
+    multipleResponses: boolean;
+    paidUsersOnly: boolean;
     userQuestions: UserQuestion[]
 }
 
