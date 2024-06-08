@@ -34,7 +34,7 @@ export default function Register({ setLoggedInUser }:any) {
       register(newUser).then((user) => {
         if (user) {
           setLoggedInUser(user);
-          navigate("/");
+          navigate("/home");
         } else {
           setRegistrationFailure(true);
         }

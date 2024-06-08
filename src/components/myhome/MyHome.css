@@ -36,17 +36,29 @@
     
 }
 
-.q-card{
-    background-color: rgb(45, 38, 57);
-
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-bottom: 2rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
 
 .q-li{
+
+    list-style: none;
+    display: flex;
+    justify-content: center;
+
+    .q-container {
+        display: flex;
+        width: 100%;
+        align-content: center;
+        margin-left: 13%;
+
+    }
+        
+    .q-card{
+        background-color: rgb(243, 237, 255);
+        width: 80%;
+        margin-bottom: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     .q-body{
         font-size: 20px;
         margin-top: 0.5rem;
@@ -68,6 +80,19 @@
     .q-save{
         float: right;
         margin-top: -10px;
+    }
+
+    .q-add{
+        float: right;
+        aspect-ratio: 1;
+        height: 80px;
+        width: 80px;
+        margin-bottom: 2rem;
+    }
+
+    .q-add-btn{
+
+
     }
 }
 
