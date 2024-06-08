@@ -12,12 +12,6 @@ export const AccountPage = ({ loggedInUser }: any) => {
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Typography variant="subtitle1" color="textSecondary">
-                                Username
-                            </Typography>
-                            <Typography variant="body1">{loggedInUser.userName}</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="subtitle1" color="textSecondary">
                                 Email
                             </Typography>
                             <Typography variant="body1">{loggedInUser.email}</Typography>

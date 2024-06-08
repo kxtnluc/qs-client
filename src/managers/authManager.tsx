@@ -27,7 +27,9 @@ export const tryGetLoggedInUser = () => {
 };
 
 export const register = (userProfile:any) => {
-  if(userProfile.userName === '' || userProfile.userName === null) userProfile.userName = "none"
+  
+  // if(userProfile.userName === '' || userProfile.userName === null) userProfile.userName = "none"
+  
   userProfile.password = btoa(userProfile.password);
   return fetch(_apiUrl + "/register", {
     credentials: "same-origin",

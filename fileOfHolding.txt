@@ -13,3 +13,12 @@
         />
     </div>
 </Card>
+
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                    <button onClick={()=>console.log(qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length)}>cloc</button>

@@ -82,7 +82,17 @@ export const MyHome = ({ loggedInUser }: any) => {
   }
 
   const handleSubmit = (question: Question, id: number) => { //=====================SUBVMIT
-    //post to database
+    const submitElement = document.getElementById(`submit-input-${question.id.toString()}`) as HTMLInputElement
+    const submitBtnElement = document.getElementById(`submit-btn-${question.id.toString()}`) as HTMLInputElement
+
+    if (submitElement) submitElement.disabled = true;
+    if (submitBtnElement) {
+      submitBtnElement.tabIndex = -1;
+      submitBtnElement.classList.add('Mui-disabled');
+    }
+
+
+    // post to database
     const userQuestionObj: UserQuestionDTO = {
       userProfileId: loggedInUser.id,
       questionId: question.id,
@@ -92,9 +102,20 @@ export const MyHome = ({ loggedInUser }: any) => {
     if (userQuestionObj.questionId !== undefined && userQuestionObj.response !== '' && userQuestionObj.userProfileId !== undefined && userQuestionObj.response !== undefined) {
       console.log(userQuestionObj)
       createUserQuestion(userQuestionObj)
+      if (submitElement) submitElement.disabled = false;
+      if (submitBtnElement) {
+        submitBtnElement.tabIndex = 0;
+        submitBtnElement.classList.remove('Mui-disabled');
+      }
       setReload(!reload)
-    } else console.log('invalid submit')
-
+    } else {
+      console.log('invalid submit')
+      if (submitElement) submitElement.disabled = false;
+      if (submitBtnElement) {
+        submitBtnElement.tabIndex = 0;
+        submitBtnElement.classList.remove('Mui-disabled');
+      }
+    }
 
 
   }
@@ -158,7 +179,7 @@ export const MyHome = ({ loggedInUser }: any) => {
           <Tabs value={value} textColor='inherit' onChange={handleChange} aria-label="basic tabs example">
             {questionGroups.map((q: QuestionGroup, i: number) => {
               return (
-                <Tab onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
+                  <Tab onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
               )
             })}
           </Tabs>
@@ -174,9 +195,16 @@ export const MyHome = ({ loggedInUser }: any) => {
                     </div>
                     <div className='qg-edit-div'>
                       <Tooltip title="New Questions">
-                        <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "20px", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
-                          <AddIcon sx={{ color: "lightgreen" }} fontSize='large' />
-                        </IconButton>
+                        {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length === 0 ?
+                          <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "20px", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
+                            <AddIcon sx={{ color: "lightgreen" }} fontSize='large' />
+                          </IconButton>
+                          :
+                          <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "10px", borderRadius: "15px", padding: "5px", boxShadow: "20", }} className='qg-edit-button'>
+                            <AddIcon sx={{ color: "lightgreen", fontSize: "44px" }} fontSize='large' />
+                          </IconButton>
+                        }
+
                       </Tooltip>
 
 
@@ -193,11 +221,15 @@ export const MyHome = ({ loggedInUser }: any) => {
                         :
                         (
                           <> {/*=================If Edit Mode is NOT ACTIVE=================*/}
-                            <Tooltip title="Edit Responses">
-                              <IconButton onClick={() => setEditMode(!editMode)} sx={{ bgcolor: "#2a303f", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
-                                <ModeEditIcon sx={{ color: "lightgreen" }} fontSize='large' />
-                              </IconButton>
-                            </Tooltip>
+                            {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length === 0 ?
+                              (
+                                <Tooltip title="Edit Responses">
+                                  <IconButton onClick={() => setEditMode(!editMode)} sx={{ bgcolor: "#2a303f", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
+                                    <ModeEditIcon sx={{ color: "lightgreen" }} fontSize='large' />
+                                  </IconButton>
+                                </Tooltip>
+                              ) : ("")}
+
                           </>
                         )}
 
@@ -241,9 +273,9 @@ export const MyHome = ({ loggedInUser }: any) => {
                         })}
                       </ul>
                       :
-                      <>
+                      <> {/*=================If Edit Mode is NOT ACTIVE=================*/}
                         {addQuestionMode ?
-                          <ul className='q-ul'>
+                          <ul className='q-ul'> {/*=================If User is Adding ANOTHER Response=================*/}
                             <li className='q-li'>
                               <div className='q-container'>
                                 <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", }} className='q-card'>
@@ -262,71 +294,87 @@ export const MyHome = ({ loggedInUser }: any) => {
                                   </div>
                                 </Card>
                                 <Tooltip title="Close">
-                                  <IconButton sx={{marginTop: "0.7rem"}} className='q-add' onClick={() => setAddQuestionMode(false)}>
+                                  <IconButton sx={{ marginTop: "0.7rem" }} className='q-add' onClick={() => setAddQuestionMode(false)}>
                                     <CloseIcon sx={{ color: "lightgreen" }} className='q-add-btn' fontSize='large' />
-                                </IconButton>
-                              </Tooltip>
-                            </div>
-                          </li>
+                                  </IconButton>
+                                </Tooltip>
+                              </div>
+                            </li>
                           </ul>
-                    :
-                    <ul className='q-ul'> {/*=================If Edit Mode is NOT ACTIVE, displays all of users answered questions=================*/}
-                      {userQuestions.filter(uq => uq.question.questionGroupId === qg.id).map((uq: UserQuestion, i: number) => {
-                        return (
-                          <li key={i} className='q-li'>
-                            {uq.question.multipleResponses ?
+                          :
+                          <ul className='q-ul'> {/*=================If Edit Mode is NOT ACTIVE, and they are NOT ADDING ANOTHER RESPONSE, displays all of users answered questions=================*/}
+                            {userQuestions.filter(uq => uq.question.questionGroupId === qg.id).length === 0 ?
                               (
-                                <div className='q-container'>
-                                  <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", height: "80px" }} className='q-card'>
-                                    <div className='q-body' style={{ fontSize: "15px" }}>
-                                      {uq.question.body}
-                                    </div>
-                                    <div className='q-save' style={{ marginTop: "-1.2rem" }}>
-                                      <SpeedDialComponent setEditMode={setEditMode} setReload={setReload} reload={reload} userQuestion={uq} />
-                                    </div>
-                                    <div className='q-response' style={{ paddingBottom: "0.75rem", fontSize: "24px" }}>
-                                      {uq.response !== undefined ? (uq.response) : ("loading")}
+                                <div className='q-container' style={{ marginLeft: "25%", marginRight: "25%", marginBottom: "2%" }}>
+                                  <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF" }} className='q-card'>
+                                    <div className='q-body' style={{ fontSize: "2rem", textAlign: "center", fontWeight: "600" }}>
+                                      No Responses Found
+                                      <Tooltip title="New Questions">
+                                        <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ '&:hover': { bgcolor: '#4f576f' }, marginBottom: "5px", marginLeft: "20px", bgcolor: "#2a303f", borderRadius: "10px", padding: "1px", boxShadow: "20", }} className='qg-edit-button'>
+                                          <AddIcon sx={{ color: "lightgreen" }} fontSize='large' />
+                                        </IconButton>
+                                      </Tooltip>
                                     </div>
                                   </Card>
-                                  <Tooltip title="Add Response">
-                                    <IconButton className='q-add' onClick={() => handleAddResponse(uq.question)}>
-                                      <AddIcon sx={{ color: "lightgreen" }} className='q-add-btn' fontSize='large' />
-                                    </IconButton>
-                                  </Tooltip>
                                 </div>
                               )
-                              :
-                              (
-                                <div className='q-container'>
-                                  <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", height: "80px" }} className='q-card'>
-                                    <div className='q-body' style={{ fontSize: "15px" }}>
-                                      {uq.question.body}
-                                    </div>
-                                    <div className='q-save' style={{ marginTop: "-1.2rem" }}>
-                                      <SpeedDialComponent setEditMode={setEditMode} setReload={setReload} reload={reload} userQuestion={uq} />
-                                    </div>
-                                    <div className='q-response' style={{ paddingBottom: "0.75rem", fontSize: "24px" }}>
-                                      {uq.response !== undefined ? (uq.response) : ("loading")}
-                                    </div>
-                                  </Card>
+                              : ("")}
+                            {userQuestions.filter(uq => uq.question.questionGroupId === qg.id).map((uq: UserQuestion, i: number) => {
+                              return (
+                                <li key={i} className='q-li'>
+                                  {uq.question.multipleResponses ?
+                                    (
+                                      <div className='q-container'>
+                                        <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", height: "80px" }} className='q-card'>
+                                          <div className='q-body' style={{ fontSize: "15px" }}>
+                                            {uq.question.body}
+                                          </div>
+                                          <div className='q-save' style={{ marginTop: "-1.2rem" }}>
+                                            <SpeedDialComponent setEditMode={setEditMode} setReload={setReload} reload={reload} userQuestion={uq} />
+                                          </div>
+                                          <div className='q-response' style={{ paddingBottom: "0.75rem", fontSize: "24px" }}>
+                                            {uq.response !== undefined ? (uq.response) : ("loading")}
+                                          </div>
+                                        </Card>
+                                        <Tooltip title="Add Response">
+                                          <IconButton className='q-add' onClick={() => handleAddResponse(uq.question)}>
+                                            <AddIcon sx={{ color: "lightgreen" }} className='q-add-btn' fontSize='large' />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </div>
+                                    )
+                                    :
+                                    (
+                                      <div className='q-container'>
+                                        <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", height: "80px" }} className='q-card'>
+                                          <div className='q-body' style={{ fontSize: "15px" }}>
+                                            {uq.question.body}
+                                          </div>
+                                          <div className='q-save' style={{ marginTop: "-1.2rem" }}>
+                                            <SpeedDialComponent setEditMode={setEditMode} setReload={setReload} reload={reload} userQuestion={uq} />
+                                          </div>
+                                          <div className='q-response' style={{ paddingBottom: "0.75rem", fontSize: "24px" }}>
+                                            {uq.response !== undefined ? (uq.response) : ("loading")}
+                                          </div>
+                                        </Card>
 
-                                </div>
-                              )}
-                          </li>
-                        )
-                      })}
-                    </ul>
+                                      </div>
+                                    )}
+                                </li>
+                              )
+                            })}
+                          </ul>
                         }
-                  </>
+                      </>
                     }
 
-                </div>
-              </Card>
-            </CustomTabPanel >
+                  </div>
+                </Card>
+              </CustomTabPanel >
             </>
-    )
-  })
-}
+          )
+        })
+        }
 
       </Box >
     );
@@ -334,88 +382,93 @@ export const MyHome = ({ loggedInUser }: any) => {
 
   }
   else if (newQuestionsMode) {
-  return (
-    <>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} textColor='inherit' onChange={handleChange} aria-label="basic tabs example">
-            {questionGroups.map((q: QuestionGroup, i: number) => {
-              return (
-                <Tab onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
-              )
-            })}
-          </Tabs>
-        </Box>
-        {questionGroups.map((qg: QuestionGroup, i: number) => {
-          return (
-            <>
-              <CustomTabPanel key={i} value={value} index={i}>
-                <Card className='qg-card' sx={{ bgcolor: '#4f576f' }}>
-                  <div className='qg-cardtopper'>
-                    <div className='qg-header'>
-                      {qg.title} Information
+    return (
+      <>
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} textColor='inherit' onChange={handleChange} aria-label="basic tabs example">
+              {questionGroups.map((q: QuestionGroup, i: number) => {
+                return (
+                  <Tab onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
+                )
+              })}
+            </Tabs>
+          </Box>
+          {questionGroups.map((qg: QuestionGroup, i: number) => {
+            return (
+              <>
+                <CustomTabPanel key={i} value={value} index={i}>
+                  <Card className='qg-card' sx={{ bgcolor: '#4f576f' }}>
+                    <div className='qg-cardtopper'>
+                      <div className='qg-header'>
+                        {qg.title} Information
+                      </div>
+                      <div className='qg-edit-div'>
+                        <Tooltip title="Back">
+                          <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "20px", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
+                            <ArrowBackIosNewIcon sx={{ color: "lightgreen" }} fontSize='large' />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
                     </div>
-                    <div className='qg-edit-div'>
-                      <Tooltip title="Back">
-                        <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "20px", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
-                          <ArrowBackIosNewIcon sx={{ color: "lightgreen" }} fontSize='large' />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  </div>
-                  <div>
-
-                    <ul className='q-ul'>
-                      {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).map((q: Question, i: number) => {
-                        return (
-                          <li key={i} className='q-li'> {/* This IF Statment below is not working */}
-                            {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length >= 1 ?
-                              (
-                                <div className='q-container'>
-                                  <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", }} className='q-card'>
-                                    <div className='q-body'>
-                                      {i + 1} {q.body}
+                    <div>
+                      {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length === 0 ?
+                        <div className='q-container' style={{ marginLeft: "25%", marginRight: "25%", marginBottom: "2%" }}>
+                          <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF" }} className='q-card'>
+                            <div className='q-body' style={{ fontSize: "2rem", textAlign: "center", fontWeight: "600" }}>
+                              No Questions Available
+                              <Tooltip title="Back">
+                                <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ '&:hover': { bgcolor: '#4f576f' }, marginBottom: "5px", marginLeft: "20px", bgcolor: "#2a303f", borderRadius: "10px", padding: "1px", boxShadow: "20", }} className='qg-edit-button'>
+                                  <ArrowBackIosNewIcon sx={{ color: "lightgreen" }} fontSize='large' />
+                                </IconButton>
+                              </Tooltip>
+                            </div>
+                          </Card>
+                        </div>
+                        :
+                        (
+                          <>
+                            <ul className='q-ul'>
+                              {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).map((q: Question, i: number) => {
+                                return (
+                                  <li key={i} className='q-li'> {/* This IF Statment below is not working */}
+                                    <div className='q-container'>
+                                      <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", }} className='q-card'>
+                                        <div className='q-body'>
+                                          {i + 1} {q.body}
+                                        </div>
+                                        <div className='q-submit'>
+                                          <IconButton disabled={false} id={`submit-btn-${q.id.toString()}`} color='primary' size='small' onClick={() => handleSubmit(q, q.id)} className='q-save-btn'><PublishIcon fontSize='large' /></IconButton>
+                                        </div>
+                                        <div className='q-response'>
+                                          <TextField disabled={false} id={`submit-input-${q.id.toString()}`} onChange={(e) => handleInputChange(e, q.id)} className='q-response-input' size='small' type='text' value={responseStates[q.id] || ''}
+                                            onKeyUp={(e) => {
+                                              if (e.key === "Enter") handleSubmit(q, q.id)
+                                            }}
+                                          />
+                                        </div>
+                                      </Card>
                                     </div>
-                                    <div className='q-submit'>
-                                      <IconButton color='primary' size='small' onClick={() => handleSubmit(q, q.id)} className='q-save-btn'><PublishIcon fontSize='large' /></IconButton>
-                                    </div>
-                                    <div className='q-response'>
-                                      <TextField onChange={(e) => handleInputChange(e, q.id)} className='q-response-input' size='small' type='text' value={responseStates[q.id] || ''}
-                                        onKeyUp={(e) => {
-                                          if (e.key === "Enter") handleSubmit(q, q.id)
-                                        }}
-                                      />
-                                    </div>
-                                  </Card>
-                                </div>
-                              )
-                              :
-                              (
-                                <div className='q-container'>
-                                  <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", }} className='q-card'>
-                                    <div className='q-body'>
-                                      No Questions Available
-                                    </div>
-                                  </Card>
-                                </div>
-                              )
-                            }
-
-                          </li>
+                                  </li>
+                                )
+                              })
+                              }
+                            </ul>
+                          </>
                         )
-                      })}
-                    </ul>
-                  </div>
-                </Card>
-              </CustomTabPanel>
-            </>
-          )
-        })}
+                      }
 
-      </Box>
-    </>
-  )
-}
+                    </div>
+                  </Card>
+                </CustomTabPanel>
+              </>
+            )
+          })}
 
-return <>Error. please try reloading the page.</>
+        </Box>
+      </>
+    )
+  }
+
+  return <>Error. please try reloading the page.</>
 }
