@@ -99,6 +99,8 @@ export const MyHome = ({ loggedInUser }: any) => {
       response: responseStates[id]
     }
 
+    setReload(!reload)
+    
     if (userQuestionObj.questionId !== undefined && userQuestionObj.response !== '' && userQuestionObj.userProfileId !== undefined && userQuestionObj.response !== undefined) {
       console.log(userQuestionObj)
       createUserQuestion(userQuestionObj)
@@ -107,7 +109,6 @@ export const MyHome = ({ loggedInUser }: any) => {
         submitBtnElement.tabIndex = 0;
         submitBtnElement.classList.remove('Mui-disabled');
       }
-      setReload(!reload)
     } else {
       console.log('invalid submit')
       if (submitElement) submitElement.disabled = false;
@@ -116,7 +117,8 @@ export const MyHome = ({ loggedInUser }: any) => {
         submitBtnElement.classList.remove('Mui-disabled');
       }
     }
-
+    
+    // setReload(!reload)
 
   }
 
@@ -179,7 +181,7 @@ export const MyHome = ({ loggedInUser }: any) => {
           <Tabs value={value} textColor='inherit' onChange={handleChange} aria-label="basic tabs example">
             {questionGroups.map((q: QuestionGroup, i: number) => {
               return (
-                  <Tab onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
+                <Tab onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
               )
             })}
           </Tabs>
@@ -193,8 +195,8 @@ export const MyHome = ({ loggedInUser }: any) => {
                     <div className='qg-header'>
                       {qg.title} Information
                     </div>
-                    <div className='qg-edit-div'>
-                      <Tooltip title="New Questions">
+                    <div className='qg-edit-div'> {/* slight issue with this if statement below */}
+                      <Tooltip title="New Questions"> 
                         {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length === 0 ?
                           <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "20px", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
                             <AddIcon sx={{ color: "lightgreen" }} fontSize='large' />
@@ -324,7 +326,7 @@ export const MyHome = ({ loggedInUser }: any) => {
                                 <li key={i} className='q-li'>
                                   {uq.question.multipleResponses ?
                                     (
-                                      <div className='q-container'>
+                                      <div className='q-container' style={{display: "flex"}}>
                                         <Card raised elevation={24} sx={{ '&:hover': { scale: 1.5 }, bgcolor: "#FCFAFF", height: "80px" }} className='q-card'>
                                           <div className='q-body' style={{ fontSize: "15px" }}>
                                             {uq.question.body}

@@ -1,0 +1,28 @@
+.ap-section{
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+}
+
+.ap-card{
+    width: 50rem;
+    transition: 0.5s;
+}
+
+.ap-card:hover{
+    scale: 1.025;
+    border-color: gold;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+.ap-header{
+    text-align: center;
+    font-weight: 700;
+    font-size: 50px;
+}
+
+.ap-body{
+    text-align: center;
+    font-style: italic;
+}

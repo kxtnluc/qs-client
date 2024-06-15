@@ -50,8 +50,8 @@ export default function NavBar({ loggedInUser, setLoggedInUser }: any) {
                 </NavItem>
                 {loggedInUser.roles?.includes("Admin") && (
                   <NavItem className="nav-item" onClick={() => setOpen(false)}>
-                    <NavLink className="nav-item-link" tag={RRNavLink} to="/adminroute1">
-                      AdminLink-1
+                    <NavLink className="nav-item-link" tag={RRNavLink} to="/adminportal">
+                      ♦ Admin ♦
                     </NavLink>
                   </NavItem>
                 )}
