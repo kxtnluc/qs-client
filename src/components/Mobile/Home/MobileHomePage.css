@@ -1,0 +1,55 @@
+.m-hp-main{
+
+    .m-hp-section-header{
+
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 3em;
+        font-weight: 500;
+        margin-top: 5%;
+
+        .m-hp-header-one{
+            .header-one-div{
+                font-size: 1.15em;
+                text-align: center;
+            }
+        }
+        
+        .m-hp-header-two{
+            font-size: 1.2em;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .m-hp-header-three{
+            font-weight: 400;
+            .header-three-div{
+                font-size: 1.15em;
+                font-style: italic;
+                text-align: center;
+            }
+        }
+    }
+
+    .m-hp-section-getstarted{
+        display: flex;
+        justify-content: center;
+        margin-top: 5em;
+        margin-bottom: 5em;
+
+        .m-hp-btn{
+            font-size: 2em;
+            font-weight: 600;
+            width: 10em;
+            background-color: rgb(160, 113, 180);
+            border-color: rgb(59, 37, 72);
+        }
+
+        .m-hp-btn:hover{
+            background-color: rgb(171, 138, 185);
+        }
+    }
+}

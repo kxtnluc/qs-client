@@ -9,7 +9,7 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteUserQuestion } from '../../managers/userQuestionManager';
+import { deleteUserQuestion } from '../../../managers/userQuestionManager';
 
 const actions = [
   { icon: <FileCopyIcon />, name: 'Copy' },

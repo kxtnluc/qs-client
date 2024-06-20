@@ -3,19 +3,20 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { getQuestionsGrouped, getQuestionsGroupedandUser } from '../../managers/questionManager';
-import { Question, QuestionGroup, UserQuestion, UserQuestionDTO } from '../../types/QuestionTypes';
 import { Button, Card, Icon, IconButton, TextField, Tooltip } from '@mui/material';
 import "./MyHome.css";
 import SaveIcon from '@mui/icons-material/Save';
 import PublishIcon from '@mui/icons-material/Publish';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CloseIcon from '@mui/icons-material/Close';
-import { createUserQuestion, getUsersUserQuestions, updateUserQuestion } from '../../managers/userQuestionManager';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SpeedDialComponent from '../misc/SpeedDialComponent';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { Question, QuestionGroup, UserQuestion, UserQuestionDTO } from '../../../types/QuestionTypes';
+import { getQuestionsGroupedandUser } from '../../../managers/questionManager';
+import { createUserQuestion, getUsersUserQuestions, updateUserQuestion } from '../../../managers/userQuestionManager';
+import { ValidateUserSub } from '../../scripts/ValidateUserSub';
+import { Lock } from '@mui/icons-material';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -149,7 +150,7 @@ export const MyHome = ({ loggedInUser }: any) => {
 
     if (userQuestionId !== undefined && response !== undefined) {
       console.log(userQuestionId, response)
-      updateUserQuestion(userQuestionId, response)
+      updateUserQuestion(userQuestionId, response).then(()=>setReload(!reload))
     } else console.log("invalid save");
 
   }
@@ -165,6 +166,8 @@ export const MyHome = ({ loggedInUser }: any) => {
     setAddQuestionMode(false)
   }
 
+  ValidateUserSub(loggedInUser)
+
 
 
   //=====================THE RETURN
@@ -178,11 +181,15 @@ export const MyHome = ({ loggedInUser }: any) => {
     return (
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} textColor='inherit' onChange={handleChange} aria-label="basic tabs example">
+        <Tabs variant='scrollable' scrollButtons allowScrollButtonsMobile value={value} textColor='inherit' onChange={handleChange} aria-label="basic tabs example">
             {questionGroups.map((q: QuestionGroup, i: number) => {
-              return (
-                <Tab onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
-              )
+
+              if(q.title === 'User') return <Tab disabled={false} onClick={handleTabOver} label={q.title} {...a11yProps(i)} />
+
+              else if(!loggedInUser.paidUser) return <Tab icon={<Lock/>} disabled={!loggedInUser.paidUser} onClick={handleTabOver} {...a11yProps(i)} />
+
+              else return <Tab label={q.title} disabled={!loggedInUser.paidUser} onClick={handleTabOver} {...a11yProps(i)} />
+            
             })}
           </Tabs>
         </Box>
@@ -197,14 +204,12 @@ export const MyHome = ({ loggedInUser }: any) => {
                     </div>
                     <div className='qg-edit-div'> {/* slight issue with this if statement below */}
                       <Tooltip title="New Questions"> 
-                        {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length === 0 ?
+                        {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length !== 0 && !editMode ?
                           <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "20px", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
                             <AddIcon sx={{ color: "lightgreen" }} fontSize='large' />
                           </IconButton>
                           :
-                          <IconButton onClick={() => setNewQuestionsMode(!newQuestionsMode)} sx={{ bgcolor: "#2a303f", marginRight: "10px", borderRadius: "15px", padding: "5px", boxShadow: "20", }} className='qg-edit-button'>
-                            <AddIcon sx={{ color: "lightgreen", fontSize: "44px" }} fontSize='large' />
-                          </IconButton>
+                          <></>
                         }
 
                       </Tooltip>
@@ -223,7 +228,7 @@ export const MyHome = ({ loggedInUser }: any) => {
                         :
                         (
                           <> {/*=================If Edit Mode is NOT ACTIVE=================*/}
-                            {qg.questions.filter(q => !userQuestions.some(uq => uq.questionId === q.id)).length === 0 ?
+                            {qg.questions.filter(q => userQuestions.some(uq => uq.questionId === q.id)).length >= 1 ?
                               (
                                 <Tooltip title="Edit Responses">
                                   <IconButton onClick={() => setEditMode(!editMode)} sx={{ bgcolor: "#2a303f", borderRadius: "10px", padding: "3px", boxShadow: "20", }} className='qg-edit-button'>
@@ -250,7 +255,7 @@ export const MyHome = ({ loggedInUser }: any) => {
                                   {i + 1}: {uq.question.body}
                                 </div>
                                 <div className='q-save'> {/*=================BELOW, checks if user has inputed any new info into the edit field=================*/}
-                                  {uq.response === responseStates[uq.questionId] || responseStates[uq.questionId] === '' ?
+                                  {uq.response === responseStates[uq.questionId] || responseStates[uq.questionId] === '' || responseStates[uq.questionId] === undefined ?
                                     <Tooltip title='Save'>
                                       <IconButton color='primary' size='large' disabled className='q-save-btn'><SaveIcon fontSize='large' /></IconButton>
                                     </Tooltip>

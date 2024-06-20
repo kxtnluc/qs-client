@@ -1,11 +1,11 @@
-import { Button, TableBody, TableCell, TableContainer, TableHead, TableRow, ThemeProvider, Typography, createTheme } from "@mui/material"
+import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { Card, CardBody, CardFooter, CardGroup, CardTitle, Table } from "reactstrap"
-import { getMemberships } from "../../managers/membershipManager"
 import "./MembershipPage.css"
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LoginIcon from '@mui/icons-material/Login';
 import { useNavigate } from "react-router-dom"
+import { getMemberships } from "../../../managers/membershipManager";
 
 export const MembershipPage = ({ loggedInUser }: any) => {
 

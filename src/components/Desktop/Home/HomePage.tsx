@@ -2,7 +2,7 @@ import { Button } from "reactstrap"
 import "./HomePage.css"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { fetchStripeCharges, fetchStripeCustomers, fetchSubscriptionActivity } from "../../managers/stripeManager"
+import { fetchStripeCharges, fetchStripeCustomers, fetchSubscriptionActivity } from "../../../managers/stripeManager"
 
 export const HomePage = ({loggedInUser}:any) => {
 
@@ -17,10 +17,10 @@ export const HomePage = ({loggedInUser}:any) => {
         // if(loggedInUser) navigate("/myhome")
             // else navigate("/login")
 
-        fetchSubscriptionActivity().then((cArray) => {
-            console.log(cArray)
-            setCustomers(cArray)
-        })
+        // fetchSubscriptionActivity().then((cArray) => {
+        //     console.log(cArray)
+        //     setCustomers(cArray)
+        // })
 
     }
 
