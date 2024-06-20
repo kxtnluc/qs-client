@@ -1,5 +1,4 @@
 import { Card, CardBody, CardHeader, CardImg } from "reactstrap"
-import tabQuestionMark from "../../images/tabQuestionMark.png";
 import "./AdminPortal.css"
 import { useNavigate } from "react-router-dom";
 
